@@ -1,5 +1,6 @@
 require 'faraday'
 require 'zeitwerk'
+require 'json'
 
 loader = Zeitwerk:: Loader.for_gem
 loader.setup
@@ -7,8 +8,8 @@ loader.setup
 module RailsLokiExporterDev
    
   class RailsLokiExporterDev
-     def self.hi
-        puts "Hello, world!"
+     def self.client
+        RailsLokiExporterDev::Client.new
      end
   end
 end 
