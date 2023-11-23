@@ -1,0 +1,27 @@
+PATH
+  remote: .
+  specs:
+    rails_loki_exporter_dev (0.0.1)
+      faraday (~> 2.6)
+      zeitwerk (~> 2.4)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    base64 (0.2.0)
+    faraday (2.7.12)
+      base64
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (3.0.2)
+    ruby2_keywords (0.0.5)
+    zeitwerk (2.6.12)
+
+PLATFORMS
+  x86_64-darwin-20
+
+DEPENDENCIES
+  rails_loki_exporter_dev!
+
+BUNDLED WITH
+   2.4.22
