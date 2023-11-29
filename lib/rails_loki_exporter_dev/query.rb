@@ -1,19 +1,8 @@
 module RailsLokiExporterDev
     class Query
-        attr_reader :resultType, :result, :stats
+        attr_reader :streams_data
         def initialize(response) 
-            @resultType = response['resultType']
-            @result = response['result']
-            @stats = response['stats']
+            @streams_data = response['streams']
         end
     end     
 end 
-
-# {
-#   "status": "success",
-#   "data": {
-#     "resultType": "vector" | "streams",
-#     "result": [<vector value>] | [<stream value>],
-#     "stats" : [<statistics>]
-#   }
-# }
