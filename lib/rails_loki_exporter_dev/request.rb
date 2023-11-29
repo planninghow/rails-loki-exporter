@@ -12,8 +12,8 @@ module RailsLokiExporterDev
         def respond_with(response)            
             if response.success?
                 puts 'Log sent successfully to Loki.'
+                puts "Response code: #{response.status}, Response body: #{response.body}"
                 body = response.body.empty? ? response.body : JSON.parse(response.body)
-                body['streams']
                 puts body
               else
                 puts "Failed to send log to Loki. Response code: #{response.status}, Response body: #{response.body}"
