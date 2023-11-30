@@ -3,23 +3,20 @@ module RailsLokiExporterDev
     include RailsLokiExporterDev::Request
 
         def send_log(log_message)
-          curr_datetime = Time.now.utc.strftime('%Y-%m-%dT%H:%M:%S.%LZ')
+          curr_datetime = Time.now.to_i * 1_000_000_000
           labels = "{source=\"my_gem\",job=\"my_gem_job\"}"
     
-          entry = {
-            'ts' => curr_datetime,
-            'line' => log_message
-          }
-    
           payload = {
-            'streams' => [
-              {
-                'labels' => labels,
-                'entries' => [entry]
+            "streams" => [
+             {
+               "stream" => { "foo" => "bar2" },
+               "values" => [
+                ["#{curr_datetime}", log_message]
+                ]
               }
             ]
           }
-    
+
           json_payload = JSON.generate(payload)
           uri = '/loki/api/v1/push'
           post uri, json_payload

@@ -21,7 +21,7 @@ What things you need to install the software and how to install them.
 ```
 You need to setup Grafana, Loki Grafana for your env: 
 follow this video: https://www.youtube.com/watch?v=0B-yQdSXFJE
-
+about Grafana https://grafana.com/docs/agent/latest/flow/setup/start-agent/
 ```
 
 ## Deployment
@@ -39,6 +39,9 @@ to run gem for test(for Macbook):
     after start grafana open webbrowser http://localhost:3000 and sighIn with login: admin, password: admin.
     setup Grafana > Home > Connections > Data sources > Loki
     setup URL: http://localhost:3100
+    brew services restart grafana-agent-flow (restart Grafana)
+    brew services stop grafana-agent-flow (stop Grafana)
+    
 
 
  - gem uninstall build rails_loki_exporter_dev (if you install gem before)
