@@ -51,5 +51,5 @@ to run gem for test(for Macbook):
  - irb (launch ruby's interactive console)
 
  - require 'rails_loki_exporter_dev'
- - client = RailsLokiExporterDev.client (create client)
- - result = client.send_log : "some log tennet" (send log)
+ - client = RailsLokiExporterDev.client('log_folder_name') (create client)
+ - result = client.send_all._logs  (send all logs)
