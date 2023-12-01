@@ -42,6 +42,7 @@ to run gem for test(for Macbook):
     brew services restart grafana-agent-flow (restart Grafana)
     brew services stop grafana-agent-flow (stop Grafana)
     
+    Ctrl+C (stop Loki)
 
 
  - gem uninstall build rails_loki_exporter_dev (if you install gem before)
