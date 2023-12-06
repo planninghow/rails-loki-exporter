@@ -1,7 +1,12 @@
 module RailsLokiExporterDev
   LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
+
   class Client
     include RailsLokiExporterDev::Request
+
+    attr_accessor :jobName
+    attr_accessor :hostName
+    attr_accessor :sourceName
 
     def initialize(log_file_path, allowed_logs_type = LOGS_TYPE)
       @log_file_path = log_file_path
@@ -15,25 +20,25 @@ module RailsLokiExporterDev
         end
       end
     end
+
     def send_log(log_message)
       curr_datetime = Time.now.to_i * 1_000_000_000
 
-      host = "somehost"
-      msg = "On server #{host} detected error"
+      msg = "On server #{hostName} detected error"
 
       payload = {
-        "streams" => [
+        'streams' => [
           {
-            "stream" => {
-              "source" => "Name-of-your-source",
-              "job" => "name-of-your-job",
-              "host" => host
+            'stream' => {
+              'source' => sourceName,
+              'job' => jobName,
+              'host' => hostName
             },
-            "values" => [[curr_datetime.to_s, log_message]],
-            "entries" => [
+            'values' => [[curr_datetime.to_s, log_message]],
+            'entries' => [
               {
-                "ts" => curr_datetime,
-                "line" => "[WARN] " + msg
+                'ts' => curr_datetime,
+                'line' => "[WARN] " + msg
               }
             ]
           }

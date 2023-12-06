@@ -33,7 +33,7 @@ Add additional notes about how to deploy this on a production system.
 
 Add links to external resources for this project, such as CI server, bug tracker, etc.
 
-
+ # Usage gem in test env:
 to run gem for test(for Macbook): 
  after installing Grafana
  - brew services start grafana (start Grafana) 
@@ -49,7 +49,7 @@ to run gem for test(for Macbook):
 
 
  # Usage in test gem with irb:
-go to your project folder:
+ go to your project folder:
  - gem uninstall build rails_loki_exporter_dev           //(if you install gem before)
  - gem build rails_loki_exporter_dev.gemspec
  - gem install rails_loki_exporter_dev-0.0.1.gem
@@ -57,13 +57,19 @@ go to your project folder:
 
  - require 'ruby_for_grafana_loki'
  - logs_type = %w(ERROR WARN FATAL INFO)                             // Use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
- - log_file_path = "log/#{Rails.env}.log"                            //(your path to .log)
- - client = RailsLokiExporterDev.client(log_folder_name, logs_type)  //(create client)
- - result = client.send_all._logs                                    //(send all logs)
+ - log_file_path = "log/#{Rails.env}.log"                            // (your path to .log)
+ - client = RailsLokiExporterDev.client(log_folder_name, logs_type)  // (create client)
+ - result = client.send_all._logs                                    // (send all logs)
 
  # Usage in your application
+ - add gem "rails_loki_exporter_dev-0.0.1.gem" to the Gemfile
+ - bundle install
+ 
  - logs_type = %w(ERROR WARN FATAL INFO)                              // Use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
  - log_file_path = "log/#{Rails.env}.log"
  - client = RailsLokiExporterDev.client(log_file_path, logs_type)
+ - client.jobName = "job name"                                        // your job name
+ - client.hostName = "host name"                                      // your host name
+ - client.sourceName = "source name"                                  // your source name
  - client.send_all_logs
  - client.send_log("This is a test log message.")
