@@ -42,18 +42,30 @@ to run gem for test(for Macbook):
     setup Grafana > Home > Connections > Data sources > Loki
     setup URL: http://localhost:3100
 
- - brew services restart grafana-agent-flow (restart Grafana)
- - brew services stop grafana-agent-flow (stop Grafana)
+ - brew services restart grafana-agent-flow             //(restart Grafana)
+ - brew services stop grafana-agent-flow                //(stop Grafana)
     
     Ctrl+C (stop Loki)
 
 
+test gem with irb:
 go to your project folder:
- - gem uninstall build rails_loki_exporter_dev (if you install gem before)
+ - gem uninstall build rails_loki_exporter_dev           //(if you install gem before)
  - gem build rails_loki_exporter_dev.gemspec
  - gem install rails_loki_exporter_dev-0.0.1.gem
  - irb (launch ruby's interactive console)
- 
- - require 'rails_loki_exporter_dev'
- - client = RailsLokiExporterDev.client('log_folder_name') (create client)
- - result = client.send_all._logs  (send all logs)
+
+ - log_file_path = "log/#{Rails.env}.log"                 //(your path to .log)
+ - client = RailsLokiExporterDev.client(log_folder_name)  //(create client)
+ - result = client.send_all._logs                         //(send all logs)
+
+
+
+ # Usage in your application
+<pre>
+
+log_file_path = "log/#{Rails.env}.log"
+client = RubyForGrafanaLoki.client(log_file_path)
+client.send_all_logs
+client.send_log("This is a test log message.")
+</pre>
