@@ -7,7 +7,7 @@ loader = Zeitwerk:: Loader.for_gem
 loader.setup
 
 module RailsLokiExporterDev
-    def self.client(logger)
-      RailsLokiExporterDev::Client.new(logger)
-    end
+  def self.client(log_file_path, logs_type)
+    RailsLokiExporterDev::Client.new(log_file_path, logs_type)
+  end
 end 

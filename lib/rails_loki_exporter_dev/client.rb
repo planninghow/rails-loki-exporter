@@ -1,15 +1,17 @@
 module RailsLokiExporterDev
+  LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
   class Client
     include RailsLokiExporterDev::Request
 
-    def initialize(log_file_path)
+    def initialize(log_file_path, allowed_logs_type = LOGS_TYPE)
       @log_file_path = log_file_path
+      @allowed_logs_type = allowed_logs_type
     end
 
     def send_all_logs
       File.open(@log_file_path, 'r') do |file|
         file.each_line do |line|
-          send_log(line)
+          send_log(line) if match_logs_type?(line)
         end
       end
     end
@@ -41,23 +43,15 @@ module RailsLokiExporterDev
       json_payload = JSON.generate(payload)
       uri = '/loki/api/v1/push'
 
-      # Use logger for sending logs to both default logger and Loki
-      # @logger.info "Sending log to Loki: #{json_payload}"
-
-      # Send logs to Loki using the post method
       post(uri, json_payload)
+    end
+
+    private
+
+    def match_logs_type?(log_line)
+      type = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)&.to_s
+
+      @allowed_logs_type.include?(type)
     end
   end
 end
-
-
-## In your Rails application code
-
-## Assuming you are in a context where `Rails.logger` is available
-#rails_logger = Rails.logger
-
-## Create an instance of the client
-#client = RailsLokiExporterDev.client(rails_logger)
-
-## Set up log forwarding from Rails logger to Loki
-#client.send_rails_logs_to_loki

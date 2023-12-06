@@ -48,22 +48,22 @@ to run gem for test(for Macbook):
     Ctrl+C (stop Loki)
 
 
-test gem with irb:
+ # Usage in test gem with irb:
 go to your project folder:
  - gem uninstall build rails_loki_exporter_dev           //(if you install gem before)
  - gem build rails_loki_exporter_dev.gemspec
  - gem install rails_loki_exporter_dev-0.0.1.gem
  - irb (launch ruby's interactive console)
 
- - log_file_path = "log/#{Rails.env}.log"                 //(your path to .log)
- - client = RailsLokiExporterDev.client(log_folder_name)  //(create client)
- - result = client.send_all._logs                         //(send all logs)
-
-
+ - require 'ruby_for_grafana_loki'
+ - logs_type = %w(ERROR WARN FATAL INFO)                             // Use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
+ - log_file_path = "log/#{Rails.env}.log"                            //(your path to .log)
+ - client = RailsLokiExporterDev.client(log_folder_name, logs_type)  //(create client)
+ - result = client.send_all._logs                                    //(send all logs)
 
  # Usage in your application
-
+ - logs_type = %w(ERROR WARN FATAL INFO)                              // Use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
  - log_file_path = "log/#{Rails.env}.log"
- - client = RubyForGrafanaLoki.client(log_file_path)
+ - client = RailsLokiExporterDev.client(log_file_path, logs_type)
  - client.send_all_logs
  - client.send_log("This is a test log message.")
