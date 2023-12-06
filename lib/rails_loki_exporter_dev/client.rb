@@ -4,13 +4,16 @@ module RailsLokiExporterDev
   class Client
     include RailsLokiExporterDev::Request
 
-    attr_accessor :jobName
-    attr_accessor :hostName
-    attr_accessor :sourceName
+    attr_accessor :job_name
+    attr_accessor :host_name
+    attr_accessor :source_name
 
     def initialize(log_file_path, allowed_logs_type = LOGS_TYPE)
       @log_file_path = log_file_path
       @allowed_logs_type = allowed_logs_type
+      @job_name = "job_name"
+      @host_name = "host_name"
+      @source_name = "source_name"
     end
 
     def send_all_logs
@@ -24,15 +27,15 @@ module RailsLokiExporterDev
     def send_log(log_message)
       curr_datetime = Time.now.to_i * 1_000_000_000
 
-      msg = "On server #{hostName} detected error"
+      msg = "On server #{@host_name} detected error"
 
       payload = {
         'streams' => [
           {
             'stream' => {
-              'source' => sourceName,
-              'job' => jobName,
-              'host' => hostName
+              'source' => @source_name,
+              'job' => @job_name,
+              'host' => @host_name
             },
             'values' => [[curr_datetime.to_s, log_message]],
             'entries' => [
