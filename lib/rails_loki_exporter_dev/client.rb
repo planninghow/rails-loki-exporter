@@ -4,22 +4,25 @@ module RailsLokiExporterDev
   class Client
     include RailsLokiExporterDev::Request
 
+    LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
+
     attr_accessor :job_name
     attr_accessor :host_name
-    attr_accessor :source_name
     attr_accessor :max_buffer_size
     attr_accessor :interaction_interval
+    attr_accessor :logger
 
-    def initialize(log_file_path, allowed_logs_type = LOGS_TYPE)
+    def initialize(log_file_path, allowed_logs_type = LOGS_TYPE, intercept_logs)
       @log_file_path = log_file_path
       @allowed_logs_type = allowed_logs_type
       @job_name = "job name"
       @host_name = "host name"
-      @source_name = "source name"
       @log_buffer = []
       @last_interaction_time = nil
       @interaction_interval = 1 # in seconds, adjust as needed
-      @max_buffer_size = 100 # set the maximum number of logs to buffer
+      @max_buffer_size = 20 # set the maximum number of logs to buffer
+      @logger = InterceptingLogger.new(intercept_logs: intercept_logs)
+      @logger.client = self
     end
 
     def send_all_logs
@@ -37,12 +40,11 @@ module RailsLokiExporterDev
         send_buffered_logs
         @last_interaction_time = Time.now
       else
-        puts('Log buffered. Waiting for more logs or interaction interval.')
+        @logger.info('Log buffered. Waiting for more logs or interaction interval.')
       end
     end
 
     private
-
     def send_buffered_logs
       return if @log_buffer.empty?
 
@@ -52,7 +54,6 @@ module RailsLokiExporterDev
         'streams' => [
           {
             'stream' => {
-              'source' => @source_name,
               'job' => @job_name,
               'host' => @host_name
             },
@@ -84,6 +85,14 @@ module RailsLokiExporterDev
     def match_logs_type?(log_line)
       type = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)&.to_s
       @allowed_logs_type.include?(type)
+    end
+
+    def self.create_logger(log_file_path, logs_type, options = {})
+      intercept_logs = options.fetch(:intercept_logs, false)
+      client = Client.new(log_file_path, logs_type, intercept_logs)
+      logger = InterceptingLogger.new(intercept_logs: intercept_logs)
+      logger.client = client
+      logger
     end
   end
 end

@@ -65,14 +65,11 @@ to run gem for test(for Macbook):
  - add gem "ruby_for_grafana_loki-0.0.6.gem"                        // to the Gemfile
  - bundle install
  
- in the project (add in config.ru file):
- - logs_type = %w(ERROR WARN FATAL)                                 // use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
- - log_file_path = "log/#{Rails.env}.log"
- - client = RubyForGrafanaLoki.client(log_file_path, logs_type)
- - client.jobName = "your job name"                                 // your job name
- - client.hostName = "your host name"                               // your host name
- - client.sourceName = "your source name"                           // your source name
- - client.interaction_interval = 1                                  // 1 sec(default value) in seconds, adjust as needed
- - client.max_buffer_size = 100                                      // 100 (default value) set the max number of logs to buffer 
- - client.send_log("This is a test log message from Logger.")       // send log from Logger
- - client.send_all_logs                                             // send all logs from "log/#{Rails.env}.log"    
+ In your Rails app project -> application.rb
+
+    config.after_initialize do
+      logs_type = %w(ERROR INFO DEBUG WARN)         // Use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
+      log_file_path = "log/#{Rails.env}.log"
+      logger = RubyForGrafanaLoki.create_logger(log_file_path, logs_type, intercept_logs: true)
+      Rails.logger = logger
+    end

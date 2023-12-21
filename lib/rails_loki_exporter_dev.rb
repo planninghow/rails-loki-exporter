@@ -7,7 +7,11 @@ loader = Zeitwerk:: Loader.for_gem
 loader.setup
 
 module RailsLokiExporterDev
-  def self.client(log_file_path, logs_type)
-    RailsLokiExporterDev::Client.new(log_file_path, logs_type)
+  def self.create_logger(log_file_path, logs_type, options = {})
+    intercept_logs = options.fetch(:intercept_logs, false)
+    client = RailsLokiExporterDev::Client.new(log_file_path, logs_type)
+    logger = RailsLokiExporterDev::InterceptingLogger.new(intercept_logs: intercept_logs)
+    logger.client = client
+    logger
   end
 end 
