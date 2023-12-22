@@ -12,7 +12,7 @@ module RailsLokiExporterDev
     attr_accessor :interaction_interval
     attr_accessor :logger
 
-    def initialize(log_file_path, allowed_logs_type = LOGS_TYPE, intercept_logs)
+    def initialize(log_file_path, allowed_logs_type, intercept_logs)
       @log_file_path = log_file_path
       @allowed_logs_type = allowed_logs_type
       @job_name = "job name"
@@ -34,13 +34,14 @@ module RailsLokiExporterDev
     end
 
     def send_log(log_message)
-      @log_buffer << log_message
-
-      if @log_buffer.size >= @max_buffer_size || can_send_log?
-        send_buffered_logs
-        @last_interaction_time = Time.now
-      else
-        @logger.info('Log buffered. Waiting for more logs or interaction interval.')
+      if match_logs_type?(log_message) 
+        @log_buffer << log_message
+        if @log_buffer.size >= @max_buffer_size || can_send_log?
+          send_buffered_logs  
+          @last_interaction_time = Time.now 
+        else
+          @logger.info('Log buffered. Waiting for more logs or interaction interval.') 
+        end
       end
     end
 
