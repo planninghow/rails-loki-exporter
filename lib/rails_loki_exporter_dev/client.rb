@@ -2,27 +2,30 @@ module RailsLokiExporterDev
   LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
   class Client
-    include RailsLokiExporterDev::Request
-
-    LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
+    include RailsLokiExporterDev::Connection
+    # LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
     attr_accessor :job_name
     attr_accessor :host_name
     attr_accessor :max_buffer_size
     attr_accessor :interaction_interval
     attr_accessor :logger
+    attr_accessor :connection
 
-    def initialize(log_file_path, allowed_logs_type, intercept_logs)
-      @log_file_path = log_file_path
-      @allowed_logs_type = allowed_logs_type
+    def initialize(config)
+      @base_url = config['base_url']
+      @log_file_path = config['log_file_path']
+      @logs_type = %w(ERROR WARN FATAL INFO DEBUG) #config['logs_type']
+      @intercept_logs = config['intercept_logs']
       @job_name = "job name"
       @host_name = "host name"
       @log_buffer = []
       @last_interaction_time = nil
       @interaction_interval = 1 # in seconds, adjust as needed
       @max_buffer_size = 20 # set the maximum number of logs to buffer
-      @logger = InterceptingLogger.new(intercept_logs: intercept_logs)
+      @logger = InterceptingLogger.new(intercept_logs: @intercept_logs)
       @logger.client = self
+      @connection = connection
     end
 
     def send_all_logs
@@ -34,13 +37,13 @@ module RailsLokiExporterDev
     end
 
     def send_log(log_message)
-      if match_logs_type?(log_message) 
+      if match_logs_type?(log_message)
         @log_buffer << log_message
         if @log_buffer.size >= @max_buffer_size || can_send_log?
-          send_buffered_logs  
-          @last_interaction_time = Time.now 
+          send_buffered_logs
+          @last_interaction_time = Time.now
         else
-          @logger.info('Log buffered. Waiting for more logs or interaction interval.') 
+          @logger.info('Log buffered. Waiting for more logs or interaction interval.')
         end
       end
     end
@@ -71,7 +74,8 @@ module RailsLokiExporterDev
 
       json_payload = JSON.generate(payload)
       uri = '/loki/api/v1/push'
-      post(uri, json_payload)
+
+      @connection.post(uri, json_payload)
 
       @log_buffer.clear
     end
@@ -85,15 +89,7 @@ module RailsLokiExporterDev
 
     def match_logs_type?(log_line)
       type = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)&.to_s
-      @allowed_logs_type.include?(type)
-    end
-
-    def self.create_logger(log_file_path, logs_type, options = {})
-      intercept_logs = options.fetch(:intercept_logs, false)
-      client = Client.new(log_file_path, logs_type, intercept_logs)
-      logger = InterceptingLogger.new(intercept_logs: intercept_logs)
-      logger.client = client
-      logger
+      @logs_type.include?(type)
     end
   end
 end

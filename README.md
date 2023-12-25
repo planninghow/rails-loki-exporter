@@ -47,29 +47,25 @@ to run gem for test(for Macbook):
     
     Ctrl+C (stop Loki)
 
-
- # Usage in test gem with irb:
- Go to your project folder:
-- gem uninstall build rails_loki_exporter_dev                       // if you install gem before
-- gem build rails_loki_exporter_dev.gemspec
-- gem install rails_loki_exporter_dev-0.0.1.gem
-- irb (launch ruby's interactive console)
-
-- require 'ruby_for_grafana_loki'
-- logs_type = %w(ERROR WARN FATAL INFO)                             // use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG
-- log_file_path = "log/#{Rails.env}.log"                            // your path to *.log
-- client = RailsLokiExporterDev.client(log_folder_name, logs_type)  // create client
-- result = client.send_all_logs
-
  # Usage in your application
- - add gem "ruby_for_grafana_loki-0.0.6.gem"                        // to the Gemfile
+ - add gem "rails_loki_exporter_dev-0.0.1.gem"                        // to the Gemfile
  - bundle install
  
- In your Rails app project -> application.rb
+ In your Rails app project 
+- create file 'config/config.yml'
 
-    config.after_initialize do
-      logs_type = %w(ERROR INFO DEBUG WARN)         // Use custom logs type: ERROR, WARN, FATAL, INFO, DEBUG 
-      log_file_path = "log/#{Rails.env}.log"
-      logger = RubyForGrafanaLoki.create_logger(log_file_path, logs_type, intercept_logs: true)
+auth_enabled: true
+base_url: 'Your grafana loki url'                                    // your url ('https://logs-prod-006.grafana.net')
+user_name: 'Your User number'                                        // your User ('747344')
+password: 'Your Grafana.com API Token.'                              // your Your Grafana.com API Token. ('glc_eya2VuLW5ld3...')
+log_file_path: "log/#{Rails.env}.log"                                // 
+logs_type: '%w(ERROR WARN FATAL INFO DEBUG)'                         // or use logs_type: %w(ERROR WARN FATAL INFO DEBUG)
+intercept_logs: true
+
+- in your 'application.rb'
+
+   config.after_initialize do
+      config_file_path = File.join(Rails.root, 'config', 'config.yml') // path to your created config.yml
+      logger = RubyForGrafanaLoki.create_logger(config_file_path)
       Rails.logger = logger
-    end
+   end

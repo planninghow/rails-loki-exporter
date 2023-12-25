@@ -1,17 +1,40 @@
 require 'faraday'
 require 'zeitwerk'
-require 'json'
-require 'time'
 
-loader = Zeitwerk:: Loader.for_gem
+loader = Zeitwerk::Loader.for_gem
 loader.setup
 
 module RailsLokiExporterDev
-  def self.create_logger(log_file_path, logs_type, options = {})
-    intercept_logs = options.fetch(:intercept_logs, false)
-    client = RailsLokiExporterDev::Client.new(log_file_path, logs_type, intercept_logs)
-    logger = RailsLokiExporterDev::InterceptingLogger.new(intercept_logs: intercept_logs)
-    logger.client = client
-    logger
+  class << self
+    def create_logger(config_file_path)
+      config = load_config(config_file_path)
+
+      connection_instance =  MyConnection.create(
+        config['base_url'],
+        config['user_name'],
+        config['password'],
+        config['auth_enabled']
+      )
+
+      client = Client.new(config)
+      logger = InterceptingLogger.new(intercept_logs: config['intercept_logs'])
+      logger.client = client
+      client.connection = connection_instance
+      logger
+    end
+
+    private
+
+    def load_config(config_file_path)
+      expanded_path = File.expand_path(config_file_path, __dir__)
+
+      if File.exist?(expanded_path)
+        config = YAML.load_file(expanded_path)
+        return config
+      else
+        puts "Config file not found: #{expanded_path}"
+        return {}
+      end
+    end
   end
-end 
+end
