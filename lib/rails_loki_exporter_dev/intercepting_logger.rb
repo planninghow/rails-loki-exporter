@@ -21,7 +21,7 @@ module RailsLokiExporterDev
 
     def add(severity, message = nil, progname = nil, &block)
       if @intercept_logs
-        client.send_log(message) if client
+        client.send_log("#{msg}") if client
       end
       super(severity, message, progname, &block)
     end
