@@ -15,7 +15,7 @@ module RailsLokiExporterDev
     def initialize(config)
       @base_url = config['base_url']
       @log_file_path = config['log_file_path']
-      @logs_type = %w(ERROR WARN FATAL INFO DEBUG) #config['logs_type']
+      @logs_type = %w(ERROR WARN FATAL INFO DEBUG) # config['logs_type']
       @intercept_logs = config['intercept_logs']
       @job_name = "job name"
       @host_name = "host name"
@@ -37,18 +37,19 @@ module RailsLokiExporterDev
     end
 
     def send_log(log_message)
-      if match_logs_type?(log_message)
-        @log_buffer << log_message
-        if @log_buffer.size >= @max_buffer_size || can_send_log?
-          send_buffered_logs
-          @last_interaction_time = Time.now
-        else
-          @logger.info('Log buffered. Waiting for more logs or interaction interval.')
-        end
+      # if match_logs_type?(log_message)
+      @log_buffer << log_message
+      if @log_buffer.size >= @max_buffer_size || can_send_log?
+        send_buffered_logs
+        @last_interaction_time = Time.now
+      else
+        @logger.info('Log buffered. Waiting for more logs or interaction interval.')
       end
+      # end
     end
 
     private
+
     def send_buffered_logs
       return if @log_buffer.empty?
 
