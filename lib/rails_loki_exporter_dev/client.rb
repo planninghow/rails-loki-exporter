@@ -15,7 +15,7 @@ module RailsLokiExporterDev
     def initialize(config)
       @base_url = config['base_url']
       @log_file_path = config['log_file_path']
-      @logs_type = %w(ERROR WARN FATAL INFO DEBUG) #config['logs_type']
+      @logs_type = config['logs_type']
       @intercept_logs = config['intercept_logs']
       @job_name = "job name"
       @host_name = "host name"
