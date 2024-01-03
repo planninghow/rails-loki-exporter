@@ -25,7 +25,7 @@ module RailsLokiExporterDev
       @log = format_message(severity_name, Time.now, progname, log_message)
 
       if @intercept_logs
-        client.send_log(@log) if client
+        client.send_log("#{message}") if client
       end
       super(severity, message, progname, &block)
     end
