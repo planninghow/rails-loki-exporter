@@ -18,7 +18,6 @@ module RailsLokiExporterDev
     end
 
     def add(severity, message = nil, progname = nil, &block)
-
       severity_name = severity_name(severity)
       log_message = message || (block&.call)
 
@@ -27,7 +26,7 @@ module RailsLokiExporterDev
         if message.nil?
           puts caller
         else
-          client.send_log("#{message}") if client
+          client.send_log("#{log_message}") if client
         end
       end
       super(severity, message, progname, &block)
