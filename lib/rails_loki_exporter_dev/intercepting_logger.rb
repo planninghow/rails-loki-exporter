@@ -37,11 +37,11 @@ module RailsLokiExporterDev
       super(severity, message, progname, &block)
     end
 
-    def debug(log_message)
+    def debug(log_message = "")
       client.send_log("#{log_message}") if client
     end
 
-    def info(log_message)
+    def info(log_message = "")
       client.send_log("#{log_message}") if client
     end
 
