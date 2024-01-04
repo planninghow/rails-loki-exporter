@@ -31,13 +31,17 @@ module RailsLokiExporterDev
         if log_message.nil?
           puts caller
         else
-          client.send_log("#{log_message}") if client
+          client.send_log(@log) if client
         end
       end
       super(severity, message, progname, &block)
     end
 
     def debug(log_message)
+      client.send_log("#{log_message}") if client
+    end
+
+    def info(log_message)
       client.send_log("#{log_message}") if client
     end
 
