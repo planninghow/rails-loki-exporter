@@ -37,6 +37,10 @@ module RailsLokiExporterDev
       super(severity, message, progname, &block)
     end
 
+    def debug(log_message)
+      client.send_log("#{log_message}") if client
+    end
+
     def broadcast_to(console)
       client.send_log(@log) if client
     end
