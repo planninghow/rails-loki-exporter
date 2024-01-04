@@ -3,7 +3,6 @@ module RailsLokiExporterDev
 
   class Client
     include RailsLokiExporterDev::Connection
-    # LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
     attr_accessor :job_name
     attr_accessor :host_name
@@ -74,7 +73,6 @@ module RailsLokiExporterDev
 
       json_payload = JSON.generate(payload)
       uri = '/loki/api/v1/push'
-
       @connection.post(uri, json_payload)
 
       @log_buffer.clear
@@ -89,7 +87,7 @@ module RailsLokiExporterDev
 
     def match_logs_type?(log_line)
       return false if log_line.nil?
-    
+
       type_match = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)
       type = type_match&.to_s
       @logs_type.include?(type)

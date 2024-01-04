@@ -1,4 +1,3 @@
-require 'faraday'
 require 'zeitwerk'
 
 loader = Zeitwerk::Loader.for_gem
@@ -9,7 +8,7 @@ module RailsLokiExporterDev
     def create_logger(config_file_path)
       config = load_config(config_file_path)
 
-      connection_instance =  MyConnection.create(
+      connection_instance =  MyConnection.new(
         config['base_url'],
         config['user_name'],
         config['password'],

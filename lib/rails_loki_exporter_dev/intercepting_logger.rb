@@ -21,8 +21,18 @@ module RailsLokiExporterDev
 
       severity_name = severity_name(severity)
       log_message = message || (block&.call)
+      
+      # puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      # puts "message: #{message}"
+      # puts "(block&.call): #{(block&.call)}"
+      # puts "log_message: #{log_message}"
+      # @log = format_message(severity_name, Time.now, progname, log_message)
+      # if @intercept_logs
+      #   client.send_log(@log) if client
+      #   puts "@log: #{@log}"
+      #   puts "<<<<<<<<<<<<<<<<<<<<<<<<"
+      # end
 
-      @log = format_message(severity_name, Time.now, progname, log_message)
       if @intercept_logs
         if message.nil?
           puts caller
@@ -40,6 +50,10 @@ module RailsLokiExporterDev
     private
 
     def format_message(severity, datetime, progname, msg)
+          puts "severity: #{severity}"
+          puts "datetime: #{datetime}"
+          puts "progname: #{progname}"
+          puts "msg: #{msg}"
       "#{severity} #{progname}: #{msg}\n"
     end
 
