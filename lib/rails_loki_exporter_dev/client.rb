@@ -88,6 +88,7 @@ module RailsLokiExporterDev
     end
 
     def match_logs_type?(log_line)
+      return true
       return false if log_line.nil?
     
       type_match = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)
