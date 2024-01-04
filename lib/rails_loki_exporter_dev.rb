@@ -30,6 +30,8 @@ module RailsLokiExporterDev
 
       if File.exist?(expanded_path)
         config = YAML.load_file(expanded_path)
+        puts "======Loaded config======"
+        puts config.to_json
         return config
       else
         puts "Config file not found: #{expanded_path}"
