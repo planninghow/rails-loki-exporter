@@ -23,7 +23,7 @@ module RailsLokiExporterDev
 
       @log = format_message(severity_name, Time.now, progname, log_message)
       if @intercept_logs
-        if message.nil?
+        if log_message.nil?
           puts caller
         else
           client.send_log("#{log_message}") if client
