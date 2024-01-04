@@ -19,7 +19,12 @@ module RailsLokiExporterDev
 
     def add(severity, message = nil, progname = nil, &block)
       severity_name = severity_name(severity)
-      log_message = message || (block.call)
+      log_message = message
+      if log_message.nil?
+        if block_given?
+          log_message = yield
+        end
+      end
 
       @log = format_message(severity_name, Time.now, progname, log_message)
       if @intercept_logs
