@@ -45,6 +45,14 @@ module RailsLokiExporterDev
       client.send_log("#{log_message}") if client
     end
 
+    def fatal(log_message = "")
+      client.send_log("#{log_message}") if client
+    end
+
+    def warn(log_message = "")
+      client.send_log("#{log_message}") if client
+    end
+
     def broadcast_to(console)
       client.send_log(@log) if client
     end
