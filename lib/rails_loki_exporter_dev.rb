@@ -18,6 +18,9 @@ module RailsLokiExporterDev
 
       client = Client.new(config)
       logger = InterceptingLogger.new(intercept_logs: config['intercept_logs'])
+      if config['enable_log_subscriber'] 
+        CustomLogSubscriber.client = client
+      end
       logger.client = client
       client.connection = connection_instance
       logger
@@ -30,7 +33,6 @@ module RailsLokiExporterDev
 
       if File.exist?(expanded_path)
         config = YAML.load_file(expanded_path)
-        puts "======Loaded config======"
         puts config.to_json
         return config
       else
