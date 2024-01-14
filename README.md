@@ -61,6 +61,7 @@ password: 'Your Grafana.com API Token.'                              // your You
 log_file_path: "log/#{Rails.env}.log"                                // 
 logs_type: '%w(ERROR WARN FATAL INFO DEBUG)'                         // or use logs_type: %w(ERROR WARN FATAL INFO DEBUG)
 intercept_logs: true
+enable_log_subscriber: true                                          // enable or disable LogSubscriber
 
 - in your 'application.rb'
 
