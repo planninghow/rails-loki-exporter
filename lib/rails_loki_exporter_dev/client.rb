@@ -87,8 +87,8 @@ module RailsLokiExporterDev
       return false if log_line.nil?
     
       type_match = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)
-      type = type_match&.to_s
-      @logs_type.include?(type)
+      type = type_match ? type_match.to_s : 'UNMATCHED'
+      type == 'UNMATCHED' || @logs_type.include?(type)
     end
   end
 end

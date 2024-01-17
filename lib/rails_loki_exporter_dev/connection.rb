@@ -1,10 +1,10 @@
 module RailsLokiExporterDev
   module Connection
-    def self.create(base_url, user_name, password, auth_enabled)
-      new(base_url, user_name, password, auth_enabled).connection
+    def self.create(base_url, user_name, password, auth_enabled, host_name, job_name)
+      new(base_url, user_name, password, auth_enabled, host_name, job_name).connection
     end
 
-    def initialize(base_url, user_name, password, auth_enabled)
+    def initialize(base_url, user_name, password, auth_enabled, host_name, job_name)
       @base_url = base_url
       @user_name = user_name
       @password = password
