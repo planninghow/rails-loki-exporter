@@ -13,7 +13,9 @@ module RailsLokiExporterDev
         config['base_url'],
         config['user_name'],
         config['password'],
-        config['auth_enabled']
+        config['auth_enabled'],
+        config['host_name'],
+        config['job_name']
       )
 
       client = Client.new(config)

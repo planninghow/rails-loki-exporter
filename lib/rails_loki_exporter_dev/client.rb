@@ -3,13 +3,11 @@ module RailsLokiExporterDev
 
   class Client
     include RailsLokiExporterDev::Connection
-    # LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
     attr_accessor :job_name
     attr_accessor :host_name
     attr_accessor :max_buffer_size
     attr_accessor :interaction_interval
-    attr_accessor :logger
     attr_accessor :connection
 
     def initialize(config)
@@ -17,14 +15,12 @@ module RailsLokiExporterDev
       @log_file_path = config['log_file_path']
       @logs_type = config['logs_type']
       @intercept_logs = config['intercept_logs']
-      @job_name = "job name"
-      @host_name = "host name"
+      @job_name = config['job_name']
+      @host_name = config['host_name']
       @log_buffer = []
       @last_interaction_time = nil
       @interaction_interval = 1 # in seconds, adjust as needed
       @max_buffer_size = 10 # set the maximum number of logs to buffer
-      @logger = InterceptingLogger.new(intercept_logs: @intercept_logs)
-      @logger.client = self
       @connection = connection
     end
 
@@ -88,7 +84,6 @@ module RailsLokiExporterDev
     end
 
     def match_logs_type?(log_line)
-      return true
       return false if log_line.nil?
     
       type_match = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)
