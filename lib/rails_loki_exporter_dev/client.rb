@@ -1,3 +1,4 @@
+require 'socket'
 module RailsLokiExporterDev
   LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
@@ -15,8 +16,8 @@ module RailsLokiExporterDev
       @log_file_path = config['log_file_path']
       @logs_type = config['logs_type']
       @intercept_logs = config['intercept_logs']
-      @job_name = config['job_name']
-      @host_name = config['host_name']
+      @job_name = config['job_name'] || "#{$0}_#{Process.pid}"
+      @host_name = config['host_name'] || Socket.gethostname
       @log_buffer = []
       @last_interaction_time = nil
       @interaction_interval = 1 # in seconds, adjust as needed
