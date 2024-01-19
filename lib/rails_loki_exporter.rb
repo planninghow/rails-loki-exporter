@@ -4,7 +4,7 @@ require 'zeitwerk'
 loader = Zeitwerk::Loader.for_gem
 loader.setup
 
-module RailsLokiExporterDev
+module RailsLokiExporter
   class << self
     def create_logger(config_file_path)
       config = load_config(config_file_path)

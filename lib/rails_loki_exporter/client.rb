@@ -1,8 +1,8 @@
-module RailsLokiExporterDev
+module RailsLokiExporter
   LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
   class Client
-    include RailsLokiExporterDev::Connection
+    include RailsLokiExporter::Connection
     # LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
     attr_accessor :job_name

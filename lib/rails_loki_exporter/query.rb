@@ -1,4 +1,4 @@
-module RailsLokiExporterDev
+module RailsLokiExporter
     class Query
         attr_reader :streams_data
         def initialize(response) 

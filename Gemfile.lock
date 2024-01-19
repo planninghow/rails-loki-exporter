@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails_loki_exporter_dev (0.0.1)
+    rails_loki_exporter (0.0.1)
       faraday (~> 2.6)
       rspec
       zeitwerk (~> 2.4)
@@ -37,7 +37,7 @@ PLATFORMS
   x86_64-darwin-22
 
 DEPENDENCIES
-  rails_loki_exporter_dev!
+  rails_loki_exporter!
 
 BUNDLED WITH
    2.4.22

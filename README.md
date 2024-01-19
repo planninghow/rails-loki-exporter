@@ -17,7 +17,7 @@ Using Bundler:
 - Add a line for **Rails Loki Exporter** gem in your Rails application `Gemfile`:
 ```rb
 ...
-gem 'rails_loki_exporter_dev', '~> <version>'
+gem 'rails_loki_exporter', '~> <version>'
 ...
 ```
 - Install dependencies using `bundler`:
@@ -43,7 +43,7 @@ require 'ruby_for_grafana_loki'
 
    config.after_initialize do
       config_file_path = File.join(Rails.root, 'config', 'config.yml')
-      logger = RailsLokiExporterDev.create_logger(config_file_path)
+      logger = RailsLokiExporters.create_logger(config_file_path)
       Rails.logger = logger
    end
 ```

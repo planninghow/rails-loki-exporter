@@ -4,7 +4,7 @@ require 'json'
 require 'net/http'
 require 'active_support/logger'
 
-module RailsLokiExporterDev
+module RailsLokiExporter
   class InterceptingLogger < ActiveSupport::Logger
     attr_accessor :client
 

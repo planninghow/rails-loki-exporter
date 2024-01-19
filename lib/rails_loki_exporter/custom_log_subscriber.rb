@@ -1,7 +1,7 @@
 
 require 'action_controller/log_subscriber'
 
-module RailsLokiExporterDev
+module RailsLokiExporter
   class CustomLogSubscriber < ActiveSupport::LogSubscriber
     INTERNAL_PARAMS = %w(controller action format _method only_path)
     class << self
@@ -32,4 +32,4 @@ end
     ActiveSupport::Notifications.unsubscribe "#{evt}.action_controller"
 end
   
-RailsLokiExporterDev::CustomLogSubscriber .attach_to :action_controller
+RailsLokiExporter::CustomLogSubscriber .attach_to :action_controller
