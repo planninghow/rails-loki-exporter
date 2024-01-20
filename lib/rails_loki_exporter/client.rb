@@ -1,8 +1,8 @@
-module RailsLokiExporterDev
+module RailsLokiExporter
   LOGS_TYPE = %w(ERROR WARN FATAL INFO DEBUG).freeze
 
   class Client
-    include RailsLokiExporterDev::Connection
+    include RailsLokiExporter::Connection
 
     attr_accessor :job_name
     attr_accessor :host_name
@@ -86,6 +86,7 @@ module RailsLokiExporterDev
     end
 
     def match_logs_type?(log_line)
+      return true
       return false if log_line.nil?
 
       type_match = log_line.match(/(ERROR|WARN|FATAL|INFO|DEBUG)/)

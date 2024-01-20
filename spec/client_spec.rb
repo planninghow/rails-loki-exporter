@@ -1,7 +1,7 @@
 # spec/client_spec.rb
 require 'spec_helper'
 require 'rspec'
-require 'rails_loki_exporter_dev'
+require 'rails_loki_exporter'
 
 RSpec.describe RubyForGrafanaLoki::Client do
   let(:log_file_path) { 'development.log' }
@@ -61,7 +61,7 @@ RSpec.describe RubyForGrafanaLoki::Client do
   end
 end
 
-RSpec.describe RailsLokiExporterDev::Client do
+RSpec.describe RailsLokiExporter::Client do
   let(:log_file_path) { 'path/to/your/log/file.log' }
   let(:allowed_logs_type) { %w(ERROR WARN FATAL INFO DEBUG) }
   let(:client) { described_class.new(log_file_path, allowed_logs_type) }

@@ -4,7 +4,7 @@ require 'json'
 require 'net/http'
 require 'active_support/logger'
 
-module RailsLokiExporterDev
+module RailsLokiExporter
   class InterceptingLogger < ActiveSupport::Logger
     attr_accessor :client
 
@@ -18,18 +18,38 @@ module RailsLokiExporterDev
     end
 
     def add(severity, message = nil, progname = nil, &block)
-
       severity_name = severity_name(severity)
-      log_message = message || (block&.call)
+      log_message = message
+      if log_message.nil?
+        if block_given?
+          log_message = yield
+        end
+      end
 
       if @intercept_logs
-        if message.nil?
+        if log_message.nil?
           puts caller
         else
-          client.send_log("#{message}") if client
+          client.send_log(@log) if client
         end
       end
       super(severity, message, progname, &block)
+    end
+
+    def debug(log_message = "")
+      client.send_log("#{log_message}") if client
+    end
+
+    def info(log_message = "")
+      client.send_log("#{log_message}") if client
+    end
+
+    def fatal(log_message = "")
+      client.send_log("#{log_message}") if client
+    end
+
+    def warn(log_message = "")
+      client.send_log("#{log_message}") if client
     end
 
     def broadcast_to(console)

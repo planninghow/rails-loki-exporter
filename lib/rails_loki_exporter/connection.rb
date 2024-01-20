@@ -2,7 +2,7 @@ require 'json'
 require 'net/http'
 require 'uri'
 
-module RailsLokiExporterDev
+module RailsLokiExporter
   module Connection
     def initialize(base_url, user_name, password, auth_enabled)
       uri = URI.parse(base_url)

@@ -1,8 +1,8 @@
-require File.expand_path('lib/rails_loki_exporter_dev/version', __dir__)
+require File.expand_path('lib/rails_loki_exporter/version', __dir__)
 
 Gem::Specification.new do |spec|
-    spec.name                  = 'rails_loki_exporter_dev'
-    spec.version               = RailsLokiExporterDev::VERSION
+    spec.name                  = 'rails_loki_exporter'
+    spec.version               = RailsLokiExporter::VERSION
     spec.authors               = ['Oleg Ten', 'Assiya Kalykova']
     spec.email                 = ['tennet0505@gmail.com']
     spec.summary               = 'Ruby for Grafana Loki'
@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
     spec.platform              = Gem::Platform::RUBY
     spec.required_ruby_version = '>= 2.7.0'
     spec.files = Dir['README.md', 'lib/**/*.rb',
-                     'rails_loki_exporter_dev.gemspec',
+                     'rails_loki_exporter.gemspec',
                      'Gemfile']
     spec.extra_rdoc_files      = ['README.md']
     spec.require_paths         = ['lib']

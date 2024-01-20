@@ -1,4 +1,4 @@
-module RailsLokiExporterDev
+module RailsLokiExporter
     class MyConnection
       include Connection
   
