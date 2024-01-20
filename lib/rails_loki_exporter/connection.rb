@@ -1,52 +1,56 @@
+require 'json'
+require 'net/http'
+require 'uri'
+
 module RailsLokiExporter
   module Connection
-    def self.create(base_url, user_name, password, auth_enabled)
-      new(base_url, user_name, password, auth_enabled).connection
-    end
-
     def initialize(base_url, user_name, password, auth_enabled)
-      @base_url = base_url
+      uri = URI.parse(base_url)
+      @base_url = uri
       @user_name = user_name
       @password = password
       @auth_enabled = auth_enabled
     end
     def connection
-      Faraday.new(options) do |faraday|
-        faraday.adapter Faraday.default_adapter
-        faraday.request :json # Add this line to log request details
-        faraday.response :logger # Add this line to log response details to console
-        faraday.response :json, content_type: /\bjson$/ # Assume JSON response
-        faraday.request :url_encoded
-      end
+      http = Net::HTTP.new(@base_url.to_s, @base_url.port)
+      http.use_ssl = @base_url.scheme == 'https'
+      http.read_timeout = 30 # Adjust as needed
+      http.open_timeout = 30 # Adjust as needed
+      http
     end
+    def post(url_loki, body)
+      url = @base_url.to_s + url_loki
+      username = @user_name
+      password = @password
+      send_authenticated_post(url, body, username, password)
+    end
+    def send_authenticated_post(url, body, username, password)
+      uri = URI.parse(url)
+      request = Net::HTTP::Post.new(uri.path)
+      request['Content-Type'] = 'application/json'
+      request.body = body
 
-    def post(url, body)
-      response = connection.post(url) do |req|
-        req.headers['Content-Type'] = 'application/json'
-        req.body = JSON.generate(body)
+      if username && password && @auth_enabled
+        request.basic_auth(username, password)
+      else
+        raise "Username or password is nil."
       end
 
-      if response.success?
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+        http.request(request)
+      end
+
+      if response.is_a?(Net::HTTPSuccess)
         JSON.parse(response.body)
       else
-        raise "Failed to make POST request. Response code: #{response.status}, Response body: #{response.body}"
+        raise "Failed to make POST request. Response code: #{response.code}, Response body: #{response.body}"
       end
+    rescue StandardError => e
+      puts "Error: #{e.message}"
     end
-
     def base64_encode_credentials(user_name, password)
       credentials = "#{user_name}:#{password}"
       Base64.strict_encode64(credentials)
     end
-    def options
-      headers = {
-        accept: 'application/json',
-        'Content-Type' => 'application/json',
-      }
-      headers['Authorization'] = "Basic #{base64_encode_credentials(@user_name, @password)}" if @auth_enabled
-      {
-        url: @base_url,
-        headers: headers
-      }
-    end
   end
-end 
+end

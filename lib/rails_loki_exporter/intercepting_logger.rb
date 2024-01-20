@@ -26,7 +26,6 @@ module RailsLokiExporter
         end
       end
 
-      @log = format_message(severity_name, Time.now, progname, log_message)
       if @intercept_logs
         if log_message.nil?
           puts caller
@@ -60,6 +59,10 @@ module RailsLokiExporter
     private
 
     def format_message(severity, datetime, progname, msg)
+          puts "severity: #{severity}"
+          puts "datetime: #{datetime}"
+          puts "progname: #{progname}"
+          puts "msg: #{msg}"
       "#{severity} #{progname}: #{msg}\n"
     end
 
