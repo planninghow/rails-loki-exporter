@@ -1,18 +1,8 @@
 module RailsLokiExporter
     class MyConnection
       include Connection
-  
-      def self.create(base_url, user_name, password, auth_enabled)
-        new(base_url, user_name, password, auth_enabled).connection
-      end
-      private
-  
-      def initialize(base_url, user_name, password, auth_enabled)
-        uri = URI.parse(base_url)
-        @base_url = uri
-        @user_name = user_name
-        @password = password
-        @auth_enabled = auth_enabled
+      def self.create(base_url, user_name, password, auth_enabled, host_name, job_name)
+        new(base_url, user_name, password, auth_enabled, host_name, job_name).connection
       end
     end
 end

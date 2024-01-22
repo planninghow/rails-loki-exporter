@@ -4,7 +4,7 @@ require 'uri'
 
 module RailsLokiExporter
   module Connection
-    def initialize(base_url, user_name, password, auth_enabled)
+    def initialize(base_url, user_name, password, auth_enabled, host_name, job_name)
       uri = URI.parse(base_url)
       @base_url = uri
       @user_name = user_name
