@@ -40,8 +40,12 @@ module RailsLokiExporter
         http.request(request)
       end
 
-      if response.is_a?(Net::HTTPSuccess)
-        JSON.parse(response.body)
+      case response
+      when Net::HTTPSuccess
+        response.body ? JSON.parse(response.body) : nil
+      when Net::HTTPNoContent
+        puts "Request successful, but no content was returned."
+        nil
       else
         raise "Failed to make POST request. Response code: #{response.code}, Response body: #{response.body}"
       end
