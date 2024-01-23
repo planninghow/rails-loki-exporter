@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails_loki_exporter (0.0.20)
+    rails_loki_exporter (0.0.22)
       rspec
       zeitwerk (~> 2.4)
 
