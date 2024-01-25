@@ -33,7 +33,8 @@ module RailsLokiExporter
       expanded_path = File.expand_path(config_file_path, __dir__)
 
       if File.exist?(expanded_path)
-        config = YAML.load_file(expanded_path)
+        config_erb = ERB.new(File.read(expanded_path)).result
+        config = YAML.safe_load(config_erb, aliases: true)
         puts config.to_json
         return config
       else
