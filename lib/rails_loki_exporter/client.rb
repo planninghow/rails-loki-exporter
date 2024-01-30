@@ -28,13 +28,12 @@ module RailsLokiExporter
     def send_all_logs
       File.open(@log_file_path, 'r') do |file|
         file.each_line do |line|
-          send_log(line) if match_logs_type?(line)
+          send_log(line) 
         end
       end
     end
 
     def send_log(log_message)
-      if match_logs_type?(log_message)
         @log_buffer << log_message
         if @log_buffer.size >= @max_buffer_size || can_send_log?
           send_buffered_logs
@@ -42,7 +41,6 @@ module RailsLokiExporter
         else
           # @logger.info('Log buffered. Waiting for more logs or interaction interval.')
         end
-      end
     end
 
     private
