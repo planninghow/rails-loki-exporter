@@ -8,7 +8,7 @@ module RailsLokiExporter
   class InterceptingLogger < ActiveSupport::Logger
     attr_accessor :client
 
-    SEVERITY_NAMES = %w(DEBUG INFO WARN ERROR FATAL).freeze
+    SEVERITY_NAMES = %w(DEBUG INFO WARN ERROR FATAL ANY).freeze
 
     def initialize(intercept_logs: false)
       @intercept_logs = intercept_logs
@@ -23,37 +23,18 @@ module RailsLokiExporter
       if log_message.nil?
         if block_given?
           log_message = yield
-        end
-      end
-
-      if @intercept_logs
-        if log_message.nil?
-          puts caller
         else
-          client.send_log(@log) if client
+          log_message = progname
+          progname = @progname
         end
       end
+
+      if @intercept_logs && !log_message.nil?
+          formatted_message = format_message(severity_name, Time.now, progname, log_message)
+          client.send_log(formatted_message) if client
+      end
+
       super(severity, message, progname, &block)
-    end
-
-    def debug(log_message = "")
-      client.send_log("#{log_message}") if client
-    end
-
-    def info(log_message = "")
-      client.send_log("#{log_message}") if client
-    end
-
-    def fatal(log_message = "")
-      client.send_log("#{log_message}") if client
-    end
-
-    def warn(log_message = "")
-      client.send_log("#{log_message}") if client
-    end
-
-    def error(log_message = "")
-      client.send_log("#{log_message}") if client
     end
 
     def broadcast_to(console)
