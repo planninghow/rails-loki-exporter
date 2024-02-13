@@ -56,13 +56,7 @@ module RailsLokiExporter
               'job' => @job_name,
               'host' => @host_name
             },
-            'values' => @log_buffer.map { |log| [curr_datetime.to_s, log] },
-            'entries' => @log_buffer.map do |_|
-              {
-                'ts' => curr_datetime,
-                'line' => "[WARN] " + msg
-              }
-            end
+            'values' => @log_buffer.map { |log| [curr_datetime.to_s, log] }
           }
         ]
       }
