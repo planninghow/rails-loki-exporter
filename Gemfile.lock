@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails_loki_exporter (1.0.4)
+    rails_loki_exporter (1.0.5)
       rspec
       zeitwerk (~> 2.4)
 
@@ -21,7 +21,7 @@ GEM
     rspec-mocks (3.13.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-support (3.13.0)
+    rspec-support (3.13.1)
     zeitwerk (2.6.13)
 
 PLATFORMS

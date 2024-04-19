@@ -7,4 +7,4 @@ echo "---- run command: build rails_loki_exporter.gemspec ----"
 gem build rails_loki_exporter.gemspec
 echo " "
 echo "---- run command: install rails_loki_exporter ----"
-gem install rails_loki_exporter-1.0.4.gem
+gem install rails_loki_exporter-1.0.5.gem
