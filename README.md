@@ -32,6 +32,8 @@ user_name: 'Your User number'
 password: 'Your Grafana.com API Token'
 log_file_path: 'log/#{Rails.env}.log'
 logs_type: '%w(ERROR WARN FATAL INFO DEBUG)'
+interaction_interval: 5
+max_buffer_size: 100
 intercept_logs: true
 ``` 
 - Add block for **Rails Loki Exporter** in your `application.rb` file:
