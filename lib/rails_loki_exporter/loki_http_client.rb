@@ -21,8 +21,8 @@ module RailsLokiExporter
       @auth_enabled =   config['auth_enabled']
       @log_buffer = []
       @last_interaction_time = nil
-      @interaction_interval = config['interaction_interval'] || 5     # in seconds, adjust as needed
-      @max_buffer_size = config['max_buffer_size'] || 100             # set the maximum number of logs to buffer
+      @interaction_interval = (config['interaction_interval'] || '5').to_i     # in seconds, adjust as needed
+      @max_buffer_size =      (config['max_buffer_size'] || '100').to_i        # set the maximum number of logs to buffer
 
       http = Net::HTTP.new(@base_url.to_s, @base_url.port)
       http.use_ssl = @base_url.scheme == 'https'
