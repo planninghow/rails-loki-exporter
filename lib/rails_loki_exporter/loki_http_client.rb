@@ -9,8 +9,7 @@ module RailsLokiExporter
   class LokiHttpClient
 
     def initialize(config)
-      uri = URI.parse(config['base_url'])
-      @base_url =       uri
+      @base_url =       URI.parse(config['base_url']).to_s
       @log_file_path =  config['log_file_path']
       @logs_type =      config['logs_type']
       @intercept_logs = config['intercept_logs']
@@ -22,13 +21,11 @@ module RailsLokiExporter
       @log_buffer = []
       @last_interaction_time = nil
       @interaction_interval = (config['interaction_interval'] || '5').to_i     # in seconds, adjust as needed
-      @max_buffer_size =      (config['max_buffer_size'] || '100').to_i        # set the maximum number of logs to buffer
-
-      http = Net::HTTP.new(@base_url.to_s, @base_url.port)
-      http.use_ssl = @base_url.scheme == 'https'
-      http.read_timeout = 30
-      http.open_timeout = 30
-      http
+      @max_buffer_size = (config['max_buffer_size'] || '100').to_i        # set the maximum number of logs to buffer
+     
+      @uri_loki = URI.parse(@base_url + '/loki/api/v1/push')
+      @http = Net::HTTP.new(@uri_loki.host, @uri_loki.port)
+      @http.use_ssl = (@uri_loki.scheme == 'https')
     end
 
     def send_log(log_message)
@@ -57,8 +54,7 @@ module RailsLokiExporter
       }
 
       json_payload = JSON.generate(payload)
-      uri = '/loki/api/v1/push'
-      post(uri, json_payload)
+      post(json_payload)
 
       @log_buffer.clear
     end
@@ -78,28 +74,22 @@ module RailsLokiExporter
       type == 'UNMATCHED' || @logs_type.include?(type)
     end
     
-    def post(url_loki, body)
-      url = @base_url.to_s + url_loki
+    def post(body)
       username = @user_name
       password = @password
-      send_authenticated_post(url, body, username, password)
+      send_authenticated_post(body, username, password)
     end
   
-    def send_authenticated_post(url, body, username, password)
-      uri = URI.parse(url)
-      request = Net::HTTP::Post.new(uri.path)
+    def send_authenticated_post(body, username, password)
+      request = Net::HTTP::Post.new(@uri_loki.path)
       request['Content-Type'] = 'application/json'
       request.body = body
-  
       if username && password && @auth_enabled
         request.basic_auth(username, password)
       else
         raise "Username or password is nil."
       end
-      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-        http.request(request)
-      end
-  
+        response = @http.request(request)
       case response
       when Net::HTTPSuccess
         response.body ? JSON.parse(response.body) : nil
