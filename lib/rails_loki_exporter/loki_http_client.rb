@@ -32,27 +32,30 @@ module RailsLokiExporter
     end
 
     def send_log(log_message)
-        @log_buffer << log_message
-        if @log_buffer.size >= @max_buffer_size || can_send_log?
-          send_buffered_logs
-          @last_interaction_time = Time.now
-        else
-          # @logger.info('Log buffered. Waiting for more logs or interaction interval.')
-        end
+      current_timestamp = Time.now.to_f * 1_000_000_000
+      @log_buffer << [current_timestamp.to_i.to_s, log_message.chomp]
+      if @log_buffer.size >= @max_buffer_size || can_send_log?
+        send_buffered_logs
+        @last_interaction_time = Time.now
+      else
+        # @logger.info('Log buffered. Waiting for more logs or interaction interval.')
+      end
     end
 
     private
     def send_buffered_logs
       return if @log_buffer.empty?
 
-      curr_datetime = Time.now.to_i * 1_000_000_000
       msg = "On server #{@host_name} detected error"
       payload = {
         'streams' => [
-          { 'stream' => {
-            'job' => @job_name,
-            'host' => @host_name },
-            'values' => @log_buffer.map { |log| [curr_datetime.to_s, log] }}
+          {
+            'stream' => {
+              'job' => @job_name,
+              'host' => @host_name,
+            },
+            'values' => @log_buffer,
+          }
         ]
       }
 
