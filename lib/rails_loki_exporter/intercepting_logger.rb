@@ -44,10 +44,10 @@ module RailsLokiExporter
     private
 
     def format_message(severity, datetime, progname, msg)
-          puts "severity: #{severity}"
-          puts "datetime: #{datetime}"
-          puts "progname: #{progname}"
-          puts "msg: #{msg}"
+          # puts "severity: #{severity}"
+          # puts "datetime: #{datetime}"
+          # puts "progname: #{progname}"
+          # puts "msg: #{msg}"
       "#{severity} #{progname}: #{msg}\n"
     end
 
