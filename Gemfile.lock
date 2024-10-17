@@ -2,13 +2,13 @@ PATH
   remote: .
   specs:
     rails_loki_exporter (1.0.5)
-      rspec
       zeitwerk (~> 2.4)
 
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.5.1)
+    rake (13.2.1)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -29,6 +29,8 @@ PLATFORMS
 
 DEPENDENCIES
   rails_loki_exporter!
+  rake
+  rspec
 
 BUNDLED WITH
    2.1.4

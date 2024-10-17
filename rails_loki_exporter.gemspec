@@ -17,5 +17,6 @@ Gem::Specification.new do |spec|
     spec.extra_rdoc_files      = ['README.md']
     spec.require_paths         = ['lib']
     spec.add_dependency        'zeitwerk', '~> 2.4'
-    spec.add_dependency        'rspec'
+    spec.add_development_dependency 'rspec'
+    spec.add_development_dependency 'rake'
 end
