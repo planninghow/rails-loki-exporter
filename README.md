@@ -25,7 +25,8 @@ gem 'rails_loki_exporter', '~> <version>'
 $ bundle install
 ```
 - In your Rails application create `config/config.yml` file:
-```
+
+```yaml
 auth_enabled: true
 base_url: 'Your grafana loki url' 
 user_name: 'Your User number'
@@ -35,7 +36,8 @@ logs_type: '%w(ERROR WARN FATAL INFO DEBUG)'
 interaction_interval: 5
 max_buffer_size: 100
 intercept_logs: true
-``` 
+```
+
 - Add block for **Rails Loki Exporter** in your `application.rb` file:
 ```ruby
    require 'ruby_for_grafana_loki'
