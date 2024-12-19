@@ -37,8 +37,8 @@ max_buffer_size: 100
 intercept_logs: true
 ``` 
 - Add block for **Rails Loki Exporter** in your `application.rb` file:
-```
-require 'ruby_for_grafana_loki'
+```ruby
+   require 'ruby_for_grafana_loki'
    ...
    ...
    ...
