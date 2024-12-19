@@ -45,7 +45,7 @@ require 'ruby_for_grafana_loki'
 
    config.after_initialize do
       config_file_path = File.join(Rails.root, 'config', 'config.yml')
-      logger = RailsLokiExporters.create_logger(config_file_path)
+      logger = RailsLokiExporter.create_logger(config_file_path)
       Rails.logger = logger
    end
 ```
