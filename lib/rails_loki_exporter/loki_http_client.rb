@@ -94,10 +94,12 @@ module RailsLokiExporter
       request['Content-Type'] = 'application/json'
       request.body = body
   
-      if username && password && @auth_enabled
-        request.basic_auth(username, password)
-      else
-        raise "Username or password is nil."
+      if @auth_enabled
+        if username && password
+          request.basic_auth(username, password)
+        else
+          raise "Username or password is nil when authentication is enabled."
+        end
       end
       response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         http.request(request)
