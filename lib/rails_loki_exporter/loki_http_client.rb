@@ -19,6 +19,7 @@ module RailsLokiExporter
       @user_name =      config['user_name']
       @password =       config['password']
       @auth_enabled =   config['auth_enabled']
+      @additional_labels = config['labels'] || {}
       @log_buffer = []
       @last_interaction_time = nil
       @interaction_interval = (config['interaction_interval'] || '5').to_i     # in seconds, adjust as needed
@@ -29,6 +30,10 @@ module RailsLokiExporter
       http.read_timeout = 30
       http.open_timeout = 30
       http
+    end
+
+    def add_labels(labels)
+      @additional_labels.merge!(labels)
     end
 
     def send_log(log_message)
@@ -47,13 +52,15 @@ module RailsLokiExporter
       return if @log_buffer.empty?
 
       msg = "On server #{@host_name} detected error"
+      stream_labels = {
+        'job' => @job_name,
+        'host' => @host_name,
+      }.merge(@additional_labels)
+
       payload = {
         'streams' => [
           {
-            'stream' => {
-              'job' => @job_name,
-              'host' => @host_name,
-            },
+            'stream' => stream_labels,
             'values' => @log_buffer,
           }
         ]
@@ -94,10 +101,12 @@ module RailsLokiExporter
       request['Content-Type'] = 'application/json'
       request.body = body
   
-      if username && password && @auth_enabled
-        request.basic_auth(username, password)
-      else
-        raise "Username or password is nil."
+      if @auth_enabled
+        if username && password
+          request.basic_auth(username, password)
+        else
+          raise "Username or password is nil when authentication is enabled."
+        end
       end
       response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         http.request(request)

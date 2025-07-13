@@ -37,6 +37,10 @@ module RailsLokiExporter
       super(severity, message, progname, &block)
     end
 
+    def add_labels(labels)
+      client.add_labels(labels) if client
+    end
+
     def broadcast_to(console)
       client.send_log(@log) if client
     end
